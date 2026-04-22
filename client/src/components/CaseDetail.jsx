@@ -20,7 +20,7 @@ export default function CaseDetail() {
 
   useEffect(() => {
     // Fetch the specific case
-    fetch(`http://localhost:5000/api/cases/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/cases/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setCaseData(data);
@@ -29,7 +29,7 @@ export default function CaseDetail() {
       });
 
     // NEW: Fetch the logged-in user
-    fetch('http://localhost:5000/api/me', { credentials: 'include' })
+    fetch('${import.meta.env.VITE_API_URL}/api/me', { credentials: 'include' })
       .then((res) => {
         if (res.ok) return res.json();
         return null;
@@ -44,7 +44,7 @@ export default function CaseDetail() {
     if (!window.confirm('Are you sure you want to permanently delete this case?')) return;
 
     try {
-      await fetch(`http://localhost:5000/api/cases/${id}`, { method: 'DELETE' });
+      await fetch(`${import.meta.env.VITE_API_URL}/api/cases/${id}`, { method: 'DELETE' });
       navigate('/'); // Kick them back to the Case Board
     } catch (err) {
       console.error('Failed to delete case', err);
@@ -55,7 +55,7 @@ export default function CaseDetail() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await fetch(`http://localhost:5000/api/cases/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/cases/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editForm),
@@ -68,7 +68,7 @@ export default function CaseDetail() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/cases/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/cases/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setCaseData(data);
@@ -92,7 +92,7 @@ export default function CaseDetail() {
 
       // --- NEW: Tell the backend to increase the score! ---
       try {
-        await fetch('http://localhost:5000/api/user/score', {
+        await fetch('${import.meta.env.VITE_API_URL}/api/user/score', {
           method: 'POST',
           // CRUCIAL: This sends the login cookie so the server knows WHO scored!
           credentials: 'include',

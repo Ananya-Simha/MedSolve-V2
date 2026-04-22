@@ -9,14 +9,14 @@ export default function CaseBoard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/cases')
+    fetch('${import.meta.env.VITE_API_URL}/api/cases')
       .then((res) => res.json())
       .then((data) => {
         setCases(data);
         setLoading(false);
       });
 
-    fetch('http://localhost:5000/api/me', { credentials: 'include' })
+    fetch('${import.meta.env.VITE_API_URL}/api/me', { credentials: 'include' })
       .then((res) => {
         if (res.ok) return res.json();
         return null;
@@ -30,7 +30,7 @@ export default function CaseBoard() {
     if (!window.confirm('Are you sure you want to permanently delete this case?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/cases/${caseId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cases/${caseId}`, {
         method: 'DELETE',
         credentials: 'include', // Crucial: Tells the backend WHO is deleting
       });

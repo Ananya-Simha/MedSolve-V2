@@ -13,7 +13,7 @@ function App() {
 
   // Check if someone is logged in when the app loads
   useEffect(() => {
-    fetch('http://localhost:5000/api/me', { credentials: 'include' })
+    fetch(`${import.meta.env.VITE_API_URL}/api//me`, { credentials: 'include' })
       .then((res) => {
         if (res.ok) return res.json();
         return null;
@@ -23,7 +23,7 @@ function App() {
   }, []);
 
   const handleLogout = async () => {
-    await fetch('http://localhost:5000/api/logout', {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
       method: 'POST',
       credentials: 'include',
     });
