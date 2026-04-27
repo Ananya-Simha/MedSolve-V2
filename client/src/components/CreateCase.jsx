@@ -1,138 +1,97 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Login.css'; // Re-using our form styles!
+import { useNavigate, Link } from 'react-router-dom';
+import './CreateCase.css';
 
 export default function CreateCase() {
+  const [title, setTitle] = useState('');
+  const [bodySystem, setBodySystem] = useState('');
+  const [difficulty, setDifficulty] = useState('Medium');
+  const [description, setDescription] = useState('');
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    title: '',
-    bodySystem: '',
-    difficulty: 'Easy',
-    patientAge: '',
-    patientGender: 'Female',
-    patientHistory: '',
-    correctDiagnosis: '',
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const newCase = { title, bodySystem, difficulty, description };
 
-    // Format the data to match our database schema
-    const newCaseData = {
-      ...formData,
-      symptoms: ['Pending Review'], // Placeholder for now
-      vitals: { heartRate: 80, bloodPressure: '120/80', temperature: 98.6 },
-      educationalFact: 'Newly submitted case file.',
-    };
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cases`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newCase),
+    });
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cases`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCaseData),
-      });
-
-      if (response.ok) {
-        navigate('/'); // Send them back to the board to see their new case!
-      }
-    } catch (err) {
-      console.error('Failed to create case', err);
+    if (response.ok) {
+      navigate('/');
+    } else {
+      alert('Failed to create case');
     }
   };
 
   return (
-    <div className="auth-container" style={{ maxWidth: '600px', position: 'relative' }}>
-      {/* --- NEW: The Close "X" Button --- */}
-      <button
-        type="button"
-        onClick={() => navigate('/')}
-        style={{
-          position: 'absolute',
-          top: '15px',
-          right: '15px',
-          background: 'transparent',
-          border: 'none',
-          fontSize: '20px',
-          cursor: 'pointer',
-          color: '#888',
-          transition: 'color 0.2s ease',
-        }}
-        onMouseOver={(e) => (e.target.style.color = '#333')}
-        onMouseOut={(e) => (e.target.style.color = '#888')}
-        aria-label="Close"
-      >
-        ✖
-      </button>
-      {/* --------------------------------- */}
+    <main className="create-container">
+      <Link to="/" className="back-link">← Cancel & Return</Link>
+      
+      <div className="create-card">
+        <header className="create-header">
+          <h2>Create New Case File</h2>
+          <p className="text-muted">Fill out the patient details below to add a new mystery to the archives.</p>
+        </header>
 
-      <h2>Create New Case File</h2>
-      <form onSubmit={handleSubmit} className="auth-form">
-        <input
-          type="text"
-          name="title"
-          placeholder="Case Title (e.g. The Silent Ischemia)"
-          onChange={handleChange}
-          className="auth-input"
-          required
-        />
-        <input
-          type="text"
-          name="bodySystem"
-          placeholder="Body System (e.g. Cardiology)"
-          onChange={handleChange}
-          className="auth-input"
-          required
-        />
-        <select name="difficulty" onChange={handleChange} className="auth-input">
-          <option value="Easy">Easy</option>
-          <option value="Medium">Medium</option>
-          <option value="Hard">Hard</option>
-        </select>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <input
-            type="number"
-            name="patientAge"
-            placeholder="Age"
-            onChange={handleChange}
-            className="auth-input"
-            style={{ flex: 1 }}
-            required
-          />
-          <select
-            name="patientGender"
-            onChange={handleChange}
-            className="auth-input"
-            style={{ flex: 1 }}
-          >
-            <option value="Female">Female</option>
-            <option value="Male">Male</option>
-          </select>
-        </div>
-        <textarea
-          name="patientHistory"
-          placeholder="Patient History / Chief Complaint..."
-          onChange={handleChange}
-          className="auth-input"
-          style={{ height: '100px', resize: 'vertical' }}
-          required
-        />
-        <input
-          type="text"
-          name="correctDiagnosis"
-          placeholder="Correct Diagnosis"
-          onChange={handleChange}
-          className="auth-input"
-          required
-        />
+        <form onSubmit={handleSubmit} className="create-form">
+          {/* RUBRIC: Explicit labels mapped to inputs via htmlFor/id */}
+          <div className="form-group">
+            <label htmlFor="case-title">Patient Title / Designation</label>
+            <input
+              id="case-title"
+              type="text"
+              placeholder="e.g., Patient John D."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
 
-        <button type="submit" className="btn-auth btn-login" style={{ marginTop: '10px' }}>
-          Submit Case to Archives
-        </button>
-      </form>
-    </div>
+          <div className="form-group">
+            <label htmlFor="body-system">Affected Body System</label>
+            <input
+              id="body-system"
+              type="text"
+              placeholder="e.g., Cardiology, Neurology"
+              value={bodySystem}
+              onChange={(e) => setBodySystem(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="case-difficulty">Diagnostic Difficulty</label>
+            <select 
+              id="case-difficulty"
+              value={difficulty} 
+              onChange={(e) => setDifficulty(e.target.value)}
+            >
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="case-description">Clinical Description</label>
+            <textarea
+              id="case-description"
+              placeholder="Describe the patient history, symptoms, and vital signs..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Initialize Case File</button>
+          </div>
+        </form>
+      </div>
+    </main>
   );
 }

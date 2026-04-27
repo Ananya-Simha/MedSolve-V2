@@ -1,0 +1,75 @@
+.create-container {
+  padding: var(--space-4, 32px);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.create-card {
+  background-color: var(--bg-card, #171717);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: var(--space-4, 32px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.create-header {
+  margin-bottom: var(--space-4, 32px);
+  border-bottom: 1px solid #333;
+  padding-bottom: var(--space-3, 24px);
+}
+
+.create-header h2 {
+  margin-bottom: var(--space-1, 8px);
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 24px);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 8px);
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-main, #EDEDED);
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: var(--space-2, 16px);
+  background-color: var(--bg-input, #262626);
+  border: 1px solid #444;
+  color: var(--text-main, #EDEDED);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 16px;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: 2px solid var(--color-primary, #0070F3);
+  border-color: transparent;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  margin-top: var(--space-2, 16px);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-actions .btn-primary {
+  padding: var(--space-2, 16px) var(--space-4, 32px);
+}

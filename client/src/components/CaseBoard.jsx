@@ -1,12 +1,41 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import './CaseBoard.css';
+
+const CaseCard = ({ medicalCase }) => {
+  return (
+    <article className="case-card">
+      {/* Cards are H3, because the section they live in is an H2 */}
+      <h3>{medicalCase.title}</h3>
+      <div className="case-meta">
+        <p><strong>System:</strong> {medicalCase.bodySystem}</p>
+        <p><strong>Difficulty:</strong> {medicalCase.difficulty}</p>
+      </div>
+      <Link 
+        to={`/case/${medicalCase._id}`} 
+        className="btn-primary"
+        aria-label={`Open case file for ${medicalCase.title}`}
+      >
+        Open Case File
+      </Link>
+    </article>
+  );
+};
+
+CaseCard.propTypes = {
+  medicalCase: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    bodySystem: PropTypes.string.isRequired,
+    difficulty: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default function CaseBoard() {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userStats, setUserStats] = useState(null); // This holds our current user/Intern/Attending status!
-  const navigate = useNavigate();
+  const [userStats, setUserStats] = useState(null); 
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/cases`)
@@ -25,69 +54,46 @@ export default function CaseBoard() {
       .catch((err) => console.error(err));
   }, []);
 
-  // --- NEW: Handle Deleting directly from the Dashboard ---
-  const handleDelete = async (caseId) => {
-    if (!window.confirm('Are you sure you want to permanently delete this case?')) return;
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cases/${caseId}`, {
-        method: 'DELETE',
-        credentials: 'include', // Crucial: Tells the backend WHO is deleting
-      });
-
-      if (response.ok) {
-        // Instantly remove the deleted case from the screen without refreshing
-        setCases(cases.filter((c) => c._id !== caseId));
-      }
-    } catch (err) {
-      console.error('Failed to delete case', err);
-    }
-  };
-
-  if (loading) return <h2>Loading the Clinical Archives...</h2>;
+  if (loading) return <h1 aria-live="polite">Loading the Clinical Archives...</h1>;
 
   return (
-    <div className="board-container">
+    <main className="board-container">
+      {/* 1. H1 MUST BE THE FIRST HEADING ON THE PAGE */}
+      <header className="board-header">
+        <h1>MedSolve: Clinical Mystery Archive</h1>
+      </header>
+
       {userStats ? (
-        <div className="welcome-banner">
+        <section className="welcome-banner">
           <div className="welcome-text">
-            <h2>Welcome, Dr. {userStats.username}</h2>
-            <p>Rank: {userStats.role}</p>
+            {/* Changed from h2 to p with inline styling to preserve visual hierarchy without breaking screen readers */}
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: 0 }}>
+              Welcome, Dr. {userStats.username}
+            </p>
+            <p className="text-muted">Rank: {userStats.role}</p>
           </div>
           <div className="score-display">
-            <h1>{userStats.casesSolved}</h1>
-            <p>Cases Solved</p>
+            <span style={{ fontSize: '2.25rem', fontWeight: 'bold', color: 'var(--color-success)' }}>
+              {userStats.casesSolved}
+            </span>
+            <p className="text-muted">Cases Solved</p>
           </div>
-        </div>
+        </section>
       ) : (
-        <div className="guest-banner">
-          <p>
-            You are viewing the archives as a guest. <Link to="/login">Log in</Link> to save your
-            progress!
-          </p>
-        </div>
+        <section className="guest-banner">
+          <p>You are viewing the archives as a guest. <Link to="/login" className="text-link">Log in</Link> to save your progress!</p>
+        </section>
       )}
 
-      <h1>MedSolve: Clinical Mystery Archive</h1>
-      <p>Active Cold Cases: {cases.length}</p>
-
-      <div className="case-grid">
-        {cases.map((medicalCase) => (
-          <div key={medicalCase._id} className="case-card">
-            <h3>{medicalCase.title}</h3>
-            <p>
-              <strong>System:</strong> {medicalCase.bodySystem}
-            </p>
-            <p>
-              <strong>Difficulty:</strong> {medicalCase.difficulty}
-            </p>
-
-            <Link to={`/case/${medicalCase._id}`} className="btn-open">
-              Open Case File
-            </Link>
-          </div>
-        ))}
-      </div>
-    </div>
+      {/* 2. H2 for the main section */}
+      <section>
+        <h2 style={{ marginBottom: '16px' }}>Active Cold Cases ({cases.length})</h2>
+        <div className="case-grid">
+          {cases.map((medicalCase) => (
+            <CaseCard key={medicalCase._id} medicalCase={medicalCase} />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }

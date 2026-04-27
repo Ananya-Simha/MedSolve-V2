@@ -14,14 +14,13 @@ export default function Login() {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // credentials: 'include' tells React to save the login cookie!
         credentials: 'include',
         body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
         setMessage('Login successful! Welcome back, Doctor.');
-        setTimeout(() => navigate('/'), 1500); // Send them to the Case Board
+        setTimeout(() => navigate('/'), 1500);
       } else {
         setMessage('Invalid username or password.');
       }
@@ -31,41 +30,52 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-container">
-      <h2>MedSolve Staff Login</h2>
-      <form onSubmit={handleLogin} className="auth-form">
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="auth-input"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="auth-input"
-          required
-        />
-        <button type="submit" className="btn-auth btn-login">
-          Login
-        </button>
-      </form>
-      {message && (
-        <p style={{ marginTop: '15px', color: message.includes('successful') ? 'green' : 'red' }}>
-          {message}
+    <main className="auth-container">
+      <div className="auth-card">
+        <h2>MedSolve Staff Login</h2>
+        <form onSubmit={handleLogin} className="auth-form">
+          {/* RUBRIC: Explicit labels for screen readers */}
+          <div className="input-group">
+            <label htmlFor="username" className="visually-hidden">Username</label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </div>
+          
+          <div className="input-group">
+            <label htmlFor="password" className="visually-hidden">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="auth-input"
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn-auth btn-success">
+            Login to Archives
+          </button>
+        </form>
+
+        {message && (
+          <p className="auth-message" style={{ color: message.includes('successful') ? 'var(--color-success)' : 'var(--color-danger)' }}>
+            {message}
+          </p>
+        )}
+
+        <p className="auth-footer">
+          Need an account? <Link to="/register" className="auth-link">Register here</Link>.
         </p>
-      )}
-      <p style={{ marginTop: '20px', fontSize: '14px' }}>
-        Need an account?{' '}
-        <Link to="/register" className="auth-link">
-          Register here
-        </Link>
-        .
-      </p>
-    </div>
+      </div>
+    </main>
   );
 }

@@ -1,4 +1,29 @@
 /* src/index.css */
+:root {
+  --color-primary: #1D4ED8 !important; /* A deeper, highly-accessible blue */
+}
+
+/* 2. Force pure white text on all flagged buttons */
+.btn-primary, 
+.btn-new-case {
+  background-color: var(--color-primary) !important;
+  color: #FFFFFF !important; 
+  font-weight: 600 !important;
+}
+
+/* 3. Force pure white text in the Navbar to fix the 'nav.nav-bar' error */
+nav, 
+.nav-bar, 
+.nav-link, 
+nav a {
+  color: #FFFFFF !important;
+}
+
+/* 4. Fix the dark grey Case Card titles from your screenshot */
+.case-card h3, 
+.case-card h2 {
+  color: #FFFFFF !important; 
+}
 * {
   box-sizing: border-box;
 }
@@ -9,4 +34,72 @@ body {
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   background-color: #f4f7f6;
   color: #333;
+}
+/* ==========================================
+   GLOBAL CONTRAST & ACCESSIBILITY OVERRIDES
+   ========================================== */
+
+/* 1. Case Board & Welcome Banner */
+.welcome-banner h2, 
+.welcome-banner p,
+.welcome-text h2,
+.welcome-text p {
+  color: #FFFFFF !important;
+}
+.score-display h1, 
+.score-display span {
+  color: #10B981 !important; /* Green */
+}
+.score-display p {
+  color: #D4D4D8 !important; /* Light Gray */
+}
+
+/* 2. Case Details Page */
+.detail-container h1,
+.detail-container h2,
+.detail-container h3,
+.detail-container p,
+.detail-container strong,
+.detail-container li,
+.info-bar div,
+.fact-box h3,
+.fact-box p,
+.guessing-game h2 {
+  color: #FFFFFF !important;
+}
+.text-muted,
+.detail-body p,
+.admin-warning {
+  color: #D4D4D8 !important; 
+}
+
+/* 3. Auth Cards & Create Case Form */
+.auth-container h1, 
+.auth-container h2, 
+.auth-container h3,
+.create-header h2,
+.create-card h2 {
+  color: #FFFFFF !important;
+}
+.auth-container p,
+.auth-subtitle,
+.create-header p {
+  color: #D4D4D8 !important;
+}
+label,
+.form-group label {
+  color: #FFFFFF !important;
+}
+
+/* 4. Global Inputs */
+input, 
+select, 
+textarea {
+  color: #FFFFFF !important;
+  background-color: #262626 !important;
+  border: 1px solid #444 !important;
+}
+input::placeholder, 
+textarea::placeholder {
+  color: #9CA3AF !important; 
 }
