@@ -28,8 +28,8 @@ app.set('trust proxy', 1);
 // ==========================================
 const allowedOrigins = [
     'http://localhost:5173',
-    //'https://medsolve-eosin.vercel.app'
-    'https://med-solve-v2.vercel.app' // NOTE: Ensure this exactly matches your Vercel URL!
+    'https://medsolve-eosin.vercel.app',
+    'https://med-solve-v2.vercel.app' 
 ];
 
 app.use(
